@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = 'http://localhost:3001';
+const API = 'http://localhost:3001/api';
 
 export const getPositions = () =>
   axios.get(`${API}/teacher-positions`);

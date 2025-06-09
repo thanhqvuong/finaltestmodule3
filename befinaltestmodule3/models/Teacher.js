@@ -2,16 +2,17 @@ import mongoose from 'mongoose';
 
 const TeacherSchema = new mongoose.Schema({
   code: String,
-  name: String,
-  email: String,
-  phone: String,
+  isDeleted: Boolean,
   isActive: Boolean,
-  address: String,
-  teacherPosition: { type: mongoose.Schema.Types.ObjectId, ref: 'Position' },
-  education: {
-    level: String,
-    university: String
-  }
-}, { collection: 'teachers' });
+  startDate: Date,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  teacherPositionsId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Position' }],
+  degrees: [String],
+  createdAt: Date,
+  updatedAt: Date
+}, {
+  collection: 'teachers',
+  strict: false // 👉 Quan trọng: Cho phép dữ liệu không định nghĩa sẵn
+});
 
 export default mongoose.model('Teacher', TeacherSchema);

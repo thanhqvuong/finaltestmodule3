@@ -4,21 +4,40 @@ import { getPositions } from "../api/positionApi";
 
 const TeacherFormDrawer = ({ onClose }) => {
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", address: "",
-    status: "Đang công tác", position: "", education: []
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    isActive: true, // Đúng với backend yêu cầu
+    teacherPositionsId: "", // Đổi key cho đúng
+    education: []
   });
+
   const [positions, setPositions] = useState([]);
 
   useEffect(() => {
     getPositions().then(res => setPositions(res.data));
   }, []);
 
-  const handleChange = e =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    // Đảm bảo kiểu boolean cho isActive
+    if (name === "isActive") {
+      setForm(prev => ({ ...prev, isActive: value === "true" }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
+  };
 
   const handleSubmit = async () => {
-    await createTeacher(form);
-    onClose();
+    try {
+      await createTeacher(form);
+      onClose();
+    } catch (error) {
+      console.error("❌ Lỗi khi tạo giáo viên:", error);
+      alert("Lỗi khi tạo giáo viên. Vui lòng kiểm tra lại.");
+    }
   };
 
   return (
@@ -26,21 +45,65 @@ const TeacherFormDrawer = ({ onClose }) => {
       <div className="w-full max-w-md bg-white p-6 shadow-lg rounded-l-xl">
         <h2 className="text-lg font-bold mb-4">Tạo giáo viên</h2>
         <div className="space-y-4">
-          <input className="input" name="name" placeholder="Họ tên" onChange={handleChange} />
-          <input className="input" name="email" placeholder="Email" onChange={handleChange} />
-          <input className="input" name="phone" placeholder="SĐT" onChange={handleChange} />
-          <input className="input" name="address" placeholder="Địa chỉ" onChange={handleChange} />
-          <select name="position" className="input" onChange={handleChange}>
-            <option>-- Vị trí công tác --</option>
+          <input
+            className="input"
+            name="name"
+            placeholder="Họ tên"
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            name="phone"
+            placeholder="SĐT"
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            name="address"
+            placeholder="Địa chỉ"
+            onChange={handleChange}
+          />
+          <select
+            name="teacherPositionsId"
+            className="input"
+            onChange={handleChange}
+            value={form.teacherPositionsId}
+          >
+            <option value="">-- Vị trí công tác --</option>
             {positions.map(pos => (
-              <option value={pos._id} key={pos._id}>{pos.name}</option>
+              <option value={pos._id} key={pos._id}>
+                {pos.name}
+              </option>
             ))}
+          </select>
+
+          <select
+            name="isActive"
+            className="input"
+            onChange={handleChange}
+            value={form.isActive.toString()}
+          >
+            <option value="true">Đang công tác</option>
+            <option value="false">Đã nghỉ</option>
           </select>
         </div>
 
         <div className="mt-6 flex justify-between">
-          <button className="bg-gray-300 px-4 py-2 rounded" onClick={onClose}>Hủy</button>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleSubmit}>Lưu</button>
+          <button className="bg-gray-300 px-4 py-2 rounded" onClick={onClose}>
+            Hủy
+          </button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={handleSubmit}
+          >
+            Lưu
+          </button>
         </div>
       </div>
     </div>

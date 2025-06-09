@@ -1,23 +1,42 @@
 import Teacher from '../models/Teacher.js';
+import User from '../models/User.js';
+import Position from '../models/Position.js';
 
 export const getAllTeachers = async (req, res) => {
   try {
-    console.log('Received request getAllTeachers');
-    const teachers = await Teacher.find({});
-    console.log('Teachers data:', teachers);
-    res.json(teachers);
+    const teachers = await Teacher.find()
+      .populate('userId') // Lấy thông tin user
+      .populate('teacherPositionsId'); // Lấy danh sách vị trí
+
+    res.json({ data: teachers });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("❌ Lỗi lấy danh sách giáo viên:", error);
+    res.status(500).json({ message: 'Lỗi server' });
   }
 };
 
-
 export const createTeacher = async (req, res) => {
   try {
-    const { name, email, phone, status, address, position, education } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      isActive,
+      address,
+      teacherPositionsId
+    } = req.body;
 
-    // Tạo mã ngẫu nhiên không trùng
+    // Kiểm tra email trùng
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email đã tồn tại' });
+    }
+
+    // Tạo user
+    const user = new User({ name, email, phone, address });
+    await user.save();
+
+    // Tạo mã code không trùng
     let code;
     let isUnique = false;
     while (!isUnique) {
@@ -26,23 +45,20 @@ export const createTeacher = async (req, res) => {
       if (!exists) isUnique = true;
     }
 
-    const existingEmail = await Teacher.findOne({ email });
-    if (existingEmail) return res.status(400).json({ message: 'Email đã tồn tại' });
-
+    // Tạo teacher
     const newTeacher = new Teacher({
       code,
-      name,
-      email,
-      phone,
-      status,
-      address,
-      position,
-      education,
+      isActive,
+      isDeleted: false,
+      userId: user._id,
+      teacherPositionsId
     });
 
     await newTeacher.save();
-    res.status(201).json(newTeacher);
+
+    res.status(201).json({ message: 'Tạo giáo viên thành công', data: newTeacher });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi tạo giáo viên' });
+    console.error("❌ Lỗi khi tạo giáo viên:", error);
+    res.status(500).json({ message: 'Lỗi server khi tạo giáo viên' });
   }
 };

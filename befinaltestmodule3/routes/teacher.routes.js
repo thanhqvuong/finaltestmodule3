@@ -3,10 +3,8 @@ import { getAllTeachers, createTeacher } from '../controllers/Teacher.controller
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  console.log('GET /api/teachers/ được gọi');
-  res.json({ message: 'Danh sách giáo viên' });
-});
+router.get('/', getAllTeachers);
+
 
 router.post('/', createTeacher);
 

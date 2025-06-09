@@ -44,18 +44,21 @@ const TeacherList = () => {
             </tr>
           </thead>
           <tbody>
-            {teachers.map((t) => (
-              <tr key={t._id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{t.code}</td>
-                <td className="px-4 py-2">{t.name}</td>
-                <td className="px-4 py-2">{t.email}</td>
-                <td className="px-4 py-2">{t.phone}</td>
-                <td className="px-4 py-2">{t.status}</td>
-                <td className="px-4 py-2">{t.address}</td>
-                <td className="px-4 py-2">{t.position?.name}</td>
-              </tr>
-            ))}
-          </tbody>
+  {teachers.map((t) => (
+    <tr key={t._id} className="border-t hover:bg-gray-50">
+      <td className="px-4 py-2">{t.code}</td>
+      <td className="px-4 py-2">{t.userId?.name || 'N/A'}</td>
+      <td className="px-4 py-2">{t.userId?.email || 'N/A'}</td>
+      <td className="px-4 py-2">{t.userId?.phone || 'N/A'}</td>
+      <td className="px-4 py-2">{t.isActive ? 'Hoạt động' : 'Không hoạt động'}</td>
+      <td className="px-4 py-2">{t.userId?.address || 'N/A'}</td>
+      <td className="px-4 py-2">
+        {(t.teacherPositionsId || []).map((p) => p.name).join(', ') || 'N/A'}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
 
