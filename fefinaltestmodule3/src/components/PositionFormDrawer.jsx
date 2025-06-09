@@ -10,12 +10,29 @@ const PositionFormDrawer = ({ onClose }) => {
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'status') {
+      setForm({ ...form, status: value === 'true' });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleSubmit = async () => {
+    if (!form.code || !form.name) {
+      alert('Vui lòng nhập mã và tên vị trí.');
+      return;
+    }
+
     try {
       await createPosition(form);
+      setForm({
+        code: '',
+        name: '',
+        description: '',
+        status: true,
+      });
       onClose();
     } catch (err) {
       alert('Lỗi khi tạo vị trí. Vui lòng thử lại.');
@@ -49,16 +66,18 @@ const PositionFormDrawer = ({ onClose }) => {
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <select
-  name="status"
-  value={form.status}
-  onChange={(e) => setForm({ ...form, status: e.target.value === 'true' })}
-  className="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
->
-  <option value="true">Hoạt động</option>
-  <option value="false">Ngưng</option>
-</select>
-
+          <div>
+            <label className="block mb-1 font-medium">Trạng thái hoạt động</label>
+            <select
+              name="status"
+              value={form.status.toString()}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="true">Hoạt động</option>
+              <option value="false">Ngưng</option>
+            </select>
+          </div>
         </div>
 
         <div className="mt-6 flex justify-between">

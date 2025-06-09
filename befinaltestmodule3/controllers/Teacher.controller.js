@@ -3,11 +3,28 @@ import User from '../models/User.js';
 
 export const getAllTeachers = async (req, res) => {
   try {
-    const teachers = await Teacher.find()
-      .populate('userId') // Lấy thông tin user
-      .populate('teacherPositionsId'); // ✅ Populate trực tiếp tới Position (không lồng positionId nữa)
+    // ✅ Thêm phân trang
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    res.json({ data: teachers });
+    const teachers = await Teacher.find()
+      .populate('userId')
+      .populate('teacherPositionsId')
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Teacher.countDocuments();
+
+    res.json({
+      data: teachers,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("❌ Lỗi lấy danh sách giáo viên:", error);
     res.status(500).json({ message: 'Lỗi server' });
@@ -25,21 +42,19 @@ export const createTeacher = async (req, res) => {
       identity,
       phoneNumber,
       isActive,
-      teacherPositionsId
+      teacherPositionsId,
+      education // ✅ Nhận thông tin học vấn
     } = req.body;
 
-    // Kiểm tra thông tin bắt buộc
     if (!dob || !identity || !phoneNumber) {
       return res.status(400).json({ message: 'Thiếu thông tin bắt buộc: ngày sinh, CMND, hoặc số điện thoại' });
     }
 
-    // Kiểm tra email trùng
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email đã tồn tại' });
     }
 
-    // Tạo user
     const user = new User({
       name,
       email,
@@ -51,7 +66,7 @@ export const createTeacher = async (req, res) => {
     });
     await user.save();
 
-    // Tạo mã code giáo viên không trùng
+    // ✅ Tạo mã code giáo viên không trùng
     let code;
     let isUnique = false;
     while (!isUnique) {
@@ -60,13 +75,13 @@ export const createTeacher = async (req, res) => {
       if (!exists) isUnique = true;
     }
 
-    // Tạo giáo viên
     const newTeacher = new Teacher({
       code,
       isActive,
       isDeleted: false,
       userId: user._id,
-      teacherPositionsId: [teacherPositionsId], // Nếu nhận 1 vị trí duy nhất, để vào mảng
+      teacherPositionsId: [teacherPositionsId],
+      education, // ✅ Lưu học vấn
       createdAt: new Date(),
       updatedAt: new Date()
     });

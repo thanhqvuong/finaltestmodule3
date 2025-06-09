@@ -7,15 +7,22 @@ const TeacherSchema = new mongoose.Schema({
   startDate: Date,
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   teacherPositionsId: [{
-  type: mongoose.Schema.Types.ObjectId,
-  ref: 'Position'   // <- Thêm dòng này để populate hoạt động
-}],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Position'
+  }],
   degrees: [String],
+  
+  // ✅ Thêm học vấn
+  education: {
+    level: { type: String, trim: true },
+    school: { type: String, trim: true },
+  },
+
   createdAt: Date,
   updatedAt: Date
 }, {
   collection: 'teachers',
-  strict: false // 👉 Quan trọng: Cho phép dữ liệu không định nghĩa sẵn
+  strict: false
 });
 
 export default mongoose.model('Teacher', TeacherSchema);
