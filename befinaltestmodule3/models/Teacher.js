@@ -6,7 +6,10 @@ const TeacherSchema = new mongoose.Schema({
   isActive: Boolean,
   startDate: Date,
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  teacherPositionsId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Position' }],
+  teacherPositionsId: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'Position'   // <- Thêm dòng này để populate hoạt động
+}],
   degrees: [String],
   createdAt: Date,
   updatedAt: Date

@@ -6,10 +6,12 @@ const TeacherFormDrawer = ({ onClose }) => {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    phone: "",
     address: "",
-    isActive: true, // Đúng với backend yêu cầu
-    teacherPositionsId: "", // Đổi key cho đúng
+    dob: "",
+    identity: "",
+    phoneNumber: "",
+    isActive: true,
+    teacherPositionsId: [],
     education: []
   });
 
@@ -22,9 +24,10 @@ const TeacherFormDrawer = ({ onClose }) => {
   const handleChange = e => {
     const { name, value } = e.target;
 
-    // Đảm bảo kiểu boolean cho isActive
     if (name === "isActive") {
       setForm(prev => ({ ...prev, isActive: value === "true" }));
+    } else if (name === "teacherPositionsId") {
+      setForm(prev => ({ ...prev, teacherPositionsId: [value] })); // Chuyển thành mảng
     } else {
       setForm(prev => ({ ...prev, [name]: value }));
     }
@@ -60,7 +63,7 @@ const TeacherFormDrawer = ({ onClose }) => {
           <input
             className="input"
             name="phone"
-            placeholder="SĐT"
+            placeholder="SĐT phụ (nếu có)"
             onChange={handleChange}
           />
           <input
@@ -69,11 +72,30 @@ const TeacherFormDrawer = ({ onClose }) => {
             placeholder="Địa chỉ"
             onChange={handleChange}
           />
+          <input
+            className="input"
+            name="dob"
+            type="date"
+            placeholder="Ngày sinh"
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            name="identity"
+            placeholder="Số CMND/CCCD"
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            name="phoneNumber"
+            placeholder="Số điện thoại chính"
+            onChange={handleChange}
+          />
           <select
             name="teacherPositionsId"
             className="input"
             onChange={handleChange}
-            value={form.teacherPositionsId}
+            value={form.teacherPositionsId[0] || ""}
           >
             <option value="">-- Vị trí công tác --</option>
             {positions.map(pos => (

@@ -49,7 +49,7 @@ const TeacherList = () => {
       <td className="px-4 py-2">{t.code}</td>
       <td className="px-4 py-2">{t.userId?.name || 'N/A'}</td>
       <td className="px-4 py-2">{t.userId?.email || 'N/A'}</td>
-      <td className="px-4 py-2">{t.userId?.phone || 'N/A'}</td>
+      <td className="px-4 py-2">{t.userId?.phoneNumber || 'N/A'}</td>
       <td className="px-4 py-2">{t.isActive ? 'Hoạt động' : 'Không hoạt động'}</td>
       <td className="px-4 py-2">{t.userId?.address || 'N/A'}</td>
       <td className="px-4 py-2">

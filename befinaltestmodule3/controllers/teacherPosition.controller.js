@@ -2,7 +2,7 @@ import Position from '../models/Position.js';
 
 export const getAllPositions = async (req, res) => {
   try {
-    const positions = await TeacherPosition.find();
+    const positions = await Position.find(); // FIXED
     res.json(positions);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server' });
@@ -16,7 +16,7 @@ export const createPosition = async (req, res) => {
     const exists = await Position.findOne({ code });
     if (exists) return res.status(400).json({ message: 'Mã vị trí đã tồn tại' });
 
-    const newPosition = new TeacherPosition({
+    const newPosition = new Position({ // FIXED
       code,
       name,
       description,
@@ -29,4 +29,3 @@ export const createPosition = async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi tạo vị trí công tác' });
   }
 };
-
