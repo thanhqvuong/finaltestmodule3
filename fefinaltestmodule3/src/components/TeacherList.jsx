@@ -7,9 +7,13 @@ const TeacherList = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const fetchData = async () => {
+  try {
     const res = await getTeachers();
-    setTeachers(res.data);
-  };
+    setTeachers(res.data.data || []);  // Lấy đúng mảng giáo viên trong data
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu giáo viên:", error);
+  }
+};
 
   useEffect(() => {
     fetchData();
