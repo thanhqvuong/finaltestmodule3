@@ -1,9 +1,9 @@
 import express from 'express';
-import { getAllPositions, createPosition } from '../controllers/Position.controller.js';
+import { getAllPositions, createPosition } from '../controllers/teacherPosition.controller.js';
 
 const router = express.Router();
 
-router.get('/teacher-positions', getAllPositions);
-router.post('/teacher-positions', createPosition);
+router.get('/', getAllPositions);
+router.post('/', createPosition);
 
 export default router;

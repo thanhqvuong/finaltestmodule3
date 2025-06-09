@@ -17,8 +17,8 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/api', teacherRoutes);
-app.use('/api', teacherPositionRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/teacher-positions', teacherPositionRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });

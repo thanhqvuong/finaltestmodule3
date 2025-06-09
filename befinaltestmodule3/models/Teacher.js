@@ -7,7 +7,7 @@ const TeacherSchema = new mongoose.Schema({
   phone: String,
   isActive: Boolean,
   address: String,
-  teacherPosition: { type: mongoose.Schema.Types.ObjectId, ref: 'teacherposition' }, // phải đúng tên collection
+  teacherPosition: { type: mongoose.Schema.Types.ObjectId, ref: 'Position' },
   education: {
     level: String,
     university: String
