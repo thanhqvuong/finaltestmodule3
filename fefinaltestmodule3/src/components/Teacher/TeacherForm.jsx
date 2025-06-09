@@ -27,7 +27,7 @@ const TeacherForm = ({ onClose, onRefresh }) => {
   useEffect(() => {
     const fetchPositions = async () => {
       try {
-        const res = await axios.get("http://localhost:3001/api/positions");
+        const res = await axios.get("http://localhost:3001/api/teacher-positions");
         setPositions(res.data);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách vị trí:", error);

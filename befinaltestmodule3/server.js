@@ -1,8 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import connectDB from './configs/MongoDB.js'; // cần .js nếu là ES module
-import teacherRoutes from './routes/teacher.routes.js'; // <- thiếu dòng này
+import connectDB from './configs/MongoDB.js';
+import teacherRoutes from './routes/teacher.routes.js';
+import teacherPositionRoutes from './routes/teacherPosition.routes.js';
 
 dotenv.config();
 connectDB();
@@ -16,7 +17,8 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/api', teacherRoutes); // <- đây cần dòng import phía trên
+app.use('/api', teacherRoutes);
+app.use('/api', teacherPositionRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });

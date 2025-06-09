@@ -17,8 +17,8 @@ const PositionForm = ({ onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post("http://localhost:3001/api/positions", formData);
+    try {posi
+      await axios.post("http://localhost:3001/api/teacher-positions", formData);
       onSuccess();
       onClose();
     } catch (error) {

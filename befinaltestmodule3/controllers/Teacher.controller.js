@@ -14,6 +14,7 @@ export const getAllTeachers = async (req, res) => {
       .limit(limit)
       .lean();
 
+    // Định dạng kết quả trả về
     const formatted = teachers.map(t => ({
       code: t.code,
       name: t.name,
@@ -21,10 +22,10 @@ export const getAllTeachers = async (req, res) => {
       phone: t.phone,
       isActive: t.isActive,
       address: t.address,
-      teacherPosition: t.teacherPosition?.name || null,
+      teacherPosition: t.teacherPosition ? t.teacherPosition.name : null,
       education: {
-        level: t.education?.level,
-        university: t.education?.university
+        level: t.education ? t.education.level : null,
+        university: t.education ? t.education.university : null
       }
     }));
 
@@ -36,6 +37,40 @@ export const getAllTeachers = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching teachers:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const createTeacher = async (req, res) => {
+  try {
+    const { name, email, phone, isActive, address, teacherPosition, education } = req.body;
+    // Kiểm tra email trùng
+    const existingEmail = await Teacher.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Tạo mã giáo viên ngẫu nhiên không trùng
+    let code;
+    do {
+      code = Math.floor(100000 + Math.random() * 900000).toString(); // mã 6 chữ số
+    } while (await Teacher.findOne({ code }));
+
+    const newTeacher = new Teacher({
+      code,
+      name,
+      email,
+      phone,
+      isActive,
+      address,
+      teacherPosition,
+      education
+    });
+
+    await newTeacher.save();
+    res.status(201).json({ message: 'Teacher created successfully', teacher: newTeacher });
+  } catch (error) {
+    console.error('Error creating teacher:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
