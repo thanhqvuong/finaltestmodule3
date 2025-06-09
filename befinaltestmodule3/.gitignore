@@ -1,3 +1,16 @@
-.env;
-package-lock.json;
-node_modules
+# node modules
+node_modules/
+
+# môi trường
+.env
+
+# logs
+logs
+*.log
+
+# lock file (nếu không muốn push)
+package-lock.json
+
+# IDE/editor
+.vscode/
+*.swp
