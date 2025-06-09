@@ -43,14 +43,13 @@ const PositionList = () => {
                 <td className="py-3 px-4 border-b">{pos.code}</td>
                 <td className="py-3 px-4 border-b">{pos.name}</td>
                 <td className="py-3 px-4 border-b">
-  {pos.isActive ? (
-    <span className="text-green-600 font-medium">Hoạt động</span>
-  ) : (
-    <span className="text-red-500 font-medium">Ngưng</span>
-  )}
-</td>
-
-                <td className="py-3 px-4 border-b">{pos.description}</td>
+                  {pos.isActive ? (
+                    <span className="text-green-600 font-medium">Hoạt động</span>
+                  ) : (
+                    <span className="text-red-500 font-medium">Ngưng</span>
+                  )}
+                </td>
+                <td className="py-3 px-4 border-b">{pos.des || pos.description || ''}</td>
               </tr>
             ))}
           </tbody>

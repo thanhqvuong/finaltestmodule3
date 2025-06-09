@@ -11,16 +11,16 @@ export const getAllPositions = async (req, res) => {
 
 export const createPosition = async (req, res) => {
   try {
-    const { code, name, description, status } = req.body;
+    const { code, name, description, isActive } = req.body;
 
     const exists = await Position.findOne({ code });
     if (exists) return res.status(400).json({ message: 'Mã vị trí đã tồn tại' });
 
-    const newPosition = new Position({ // FIXED
+    const newPosition = new Position({
       code,
       name,
       description,
-      status,
+      isActive: isActive === true || isActive === 'true', // ✅ phải dùng đúng key
     });
 
     await newPosition.save();

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { createPosition } from '../api/positionApi';
+import { toast } from 'react-hot-toast';
 
 const PositionFormDrawer = ({ onClose }) => {
   const [form, setForm] = useState({
     code: '',
     name: '',
     description: '',
-    status: true,
+    isActive: true,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'status') {
-      setForm({ ...form, status: value === 'true' });
+    if (name === 'isActive') {
+      setForm({ ...form, isActive: value === 'true' });
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -21,21 +22,26 @@ const PositionFormDrawer = ({ onClose }) => {
 
   const handleSubmit = async () => {
     if (!form.code || !form.name) {
-      alert('Vui lòng nhập mã và tên vị trí.');
+      toast.error('Vui lòng nhập mã và tên vị trí.');
       return;
     }
 
     try {
       await createPosition(form);
+
       setForm({
         code: '',
         name: '',
         description: '',
-        status: true,
+        isActive: true,
       });
+
+      toast.success('Tạo vị trí thành công!');
       onClose();
     } catch (err) {
-      alert('Lỗi khi tạo vị trí. Vui lòng thử lại.');
+      const message =
+        err?.response?.data?.message || 'Lỗi khi tạo vị trí. Vui lòng thử lại.';
+      toast.error(message);
       console.error(err);
     }
   };
@@ -69,8 +75,8 @@ const PositionFormDrawer = ({ onClose }) => {
           <div>
             <label className="block mb-1 font-medium">Trạng thái hoạt động</label>
             <select
-              name="status"
-              value={form.status.toString()}
+              name="isActive"
+              value={form.isActive.toString()}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
